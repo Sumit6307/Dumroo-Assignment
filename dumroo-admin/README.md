@@ -40,8 +40,23 @@ python -m venv venv
 venv\Scripts\activate    # Windows
 # source venv/bin/activate  # Mac/Linux
 
+
 pip install -r requirements.txt
 
+
+
+#,Query to Type
+
+1,Which students haven’t submitted their homework yet?
+2,Show me quiz scores from last week
+3,Show me performance data for last week
+4,List all students in Grade 7
+5,Who scored below 80 in quizzes?
+6,Students in Class A
+7,List students who submitted homework
+8,Show quiz scores from November 
+9,Who has the highest quiz score?
+10,List all upcoming quizzes for next week
 
 
 
