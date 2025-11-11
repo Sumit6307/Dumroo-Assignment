@@ -30,10 +30,10 @@
 
 ---
 
-## Setup (Takes 2 Minutes)
+## Setup 
 
 ```bash
-git clone https://github.com/Sumit6307/dumroo-admin.git
+git clone https://github.com/Sumit6307/Dumroo-Assignment.git
 cd dumroo-admin
 
 python -m venv venv
