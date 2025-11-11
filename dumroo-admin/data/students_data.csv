@@ -1,0 +1,9 @@
+student_id,student_name,grade,class,homework_submitted,quiz_score,quiz_date,region
+1,Aarav Sharma,8,A,False,85,2025-11-05,North
+2,Priya Singh,8,A,True,92,2025-11-05,North
+3,Rohan Kumar,8,B,False,78,2025-11-04,North
+4,Ananya Verma,7,A,True,88,2025-11-06,South
+5,Vivaan Gupta,7,B,False,70,2025-11-07,South
+6,Ishaan Reddy,8,A,True,95,2025-11-05,North
+7,Saanvi Patel,9,A,True,90,2025-11-10,West
+8,Arjun Mehta,9,B,False,65,2025-11-09,West
