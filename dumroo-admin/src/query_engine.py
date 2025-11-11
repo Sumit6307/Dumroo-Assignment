@@ -1,4 +1,3 @@
-# src/query_engine.py
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -11,9 +10,11 @@ load_dotenv()
 
 class QueryEngine:
     def __init__(self, df: pd.DataFrame):
-        self.df = df
+        self.df = df.copy()
+        self.df['quiz_date'] = pd.to_datetime(self.df['quiz_date'], errors='coerce')
+
         self.llm = ChatGroq(
-            model="llama3-8b-8192",
+           model="llama-3.1-8b-instant",
             temperature=0,
             groq_api_key=os.getenv("GROQ_API_KEY")
         )
@@ -27,24 +28,24 @@ class QueryEngine:
 
     def ask(self, question: str):
         try:
-            code = self.chain.invoke({"question": question})
-            if hasattr(code, 'content'):
-                code = code.content
-            code = code.strip().strip("```python").strip("```")
-            print(f"Generated Code:\n{code}")
+            response = self.chain.invoke({"question": question})
+            code = response.content if hasattr(response, 'content') else str(response)
+            code = code.strip().strip("```python").strip("```").strip()
 
-            local_vars = {"df": self.df, "pd": pd}
+            print(f"\nGenerated Code:\n{code}\n")
+
+            local_vars = {"df": self.df, "pd": pd, "result": None}
             exec(code, {}, local_vars)
-            result = local_vars.get('result')
+            result = local_vars.get("result")
 
             if result is None:
-                # Fallback: extract result from last line
-                lines = code.strip().split('\n')
-                last_expr = lines[-1].strip()
-                if not last_expr.startswith('df'):
-                    exec("result = " + last_expr, {}, local_vars)
-                    result = local_vars.get('result')
+                return pd.DataFrame({"error": ["LLM did not assign `result`."]})
+            if not isinstance(result, pd.DataFrame):
+                return pd.DataFrame({"error": ["Result is not a DataFrame."]})
+            if result.empty:
+                return pd.DataFrame({"info": ["No matching data found."]})
 
-            return result if isinstance(result, pd.DataFrame) else pd.DataFrame([{"error": "No result"}])
+            return result.reset_index(drop=True)
+
         except Exception as e:
-            return pd.DataFrame({"error": [f"Query failed: {str(e)}"]})
+            return pd.DataFrame({"error": [f"Execution error: {str(e)}"]})
